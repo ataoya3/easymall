@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atao.dao.PdPictureMapper">
+
+    <!--增加一条订单-->
+    <insert id="addPdPicture" parameterType="PdPicture">
+        insert into easyexchangemall.p_picture
+        ( p1, p2, p3, pid)
+        value ( #{p1}, #{p2}, #{p3}, #{pid})
+    </insert>
+
+    <!--根据id删除一条订单-->
+    <delete id="deletePdPictureByPid" >
+        delete from easyexchangemall.p_picture
+        where pid = #{pid}
+    </delete>
+
+    <!--更新订单-->
+   <update id="updatePdPicture" parameterType="PdPicture">
+       update easyexchangemall.p_picture
+       set   p1=#{p1}, p2=#{p2}, p3=#{p3}, pid=#{pid}
+        where pid = #{pid}
+   </update>
+
+    <!--根据pid查询,返回一条订单-->
+   <select id="queryPdPictureByPid" resultType="PdPicture">
+       select * from easyexchangemall.p_picture
+       where pid = #{pid}
+   </select>
+
+    <!--查询全部订单-->
+   <select id="queryAllPdPicture" resultType="PdPicture">
+       select * from easyexchangemall.p_picture
+   </select>
+
+</mapper>

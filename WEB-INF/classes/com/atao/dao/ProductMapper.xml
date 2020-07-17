@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atao.dao.ProductMapper">
+
+    <!--增加一件商品-->
+    <insert id="addProduct" parameterType="Product">
+        insert into easyexchangemall.product
+        (NAME, detail, price, uid, p_category, pic1, pic2, pic3, home_page_detail)
+        value (#{name}, #{detail}, #{price}, #{uid}, #{pCategory}, #{pic1}, #{pic2}, #{pic3},#{homePageDetail})
+    </insert>
+
+    <!--根据id删除一件商品-->
+    <delete id="deleteProduct" >
+        delete from easyexchangemall.product
+        where id = #{id}
+    </delete>
+
+<!--    &lt;!&ndash;更新商品&ndash;&gt;    -->
+   <update id="updateProduct" parameterType="Product">
+       update easyexchangemall.product
+       set NAME=#{name}, detail= #{detail}, price=#{price}, uid=#{uid},sell_status =#{sellStatus},
+        p_category=#{pCategory},pic1=#{pic1}, pic2=#{pic2}, pic3=#{pic3}, home_page_detail=#{homePageDetail}
+        where id = #{id}
+   </update>
+
+    <!--根据id查询,返回一件商品-->
+   <select id="queryProduct" resultType="Product">
+       select * from easyexchangemall.product
+       where id = #{id}
+   </select>
+
+    <!--根据用户uid查询,返回用户发布的全部商品-->
+    <select id="queryProductByUid" resultType="Product">
+       select * from easyexchangemall.product
+       where uid = #{uid}
+       ORDER BY sell_status;
+   </select>
+    
+    <!--分页查询商品状态码为1未出售的商品————————商品推荐模块-->
+    <select id="queryProductByLimit" resultType="Product">
+        select * from easyexchangemall.product
+         where sell_status =1
+         limit #{begin},#{size}
+    </select>
+    
+    <!--查询全部商品-->
+   <select id="queryAllProduct" resultType="Product">
+       select * from easyexchangemall.product
+   </select>
+
+<!--    搜索框模糊查询————Like        -->
+    <select id="queryProductByLike" resultType="Product" parameterType="String">
+        select * from easyexchangemall.product
+        where sell_status = 1
+            <if test="productName != null">
+                and NAME LIKE CONCAT('%',#{productName},'%')
+            </if>
+        ORDER BY id DESC;
+    </select>
+
+<!--    查询商品状态码为1的商品——未售出的商品——根据id倒序展示到主页-->
+    <select id="showAllProductWhere1" resultType="Product">
+        select * from easyexchangemall.product
+        where sell_status = 1
+        ORDER BY id DESC;
+    </select>
+
+
+</mapper>

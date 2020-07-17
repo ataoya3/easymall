@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atao.dao.SellProductMapper">
+
+    <!--用户上传一件商品-->
+    <insert id="addSellProduct" parameterType="SellProduct">
+        insert into easyexchangemall.sell_product
+        (time, pid, uid)
+        value (#{time}, #{pid}, #{uid})
+    </insert>
+
+    <!--根据id删除用户上传的的一件商品-->
+    <delete id="deleteSellProduct" >
+        delete from easyexchangemall.sell_product
+        where id = #{id}
+    </delete>
+
+    <!--更新用户上传商品的信息-->
+   <update id="updateSellProduct" parameterType="SellProduct">
+       update easyexchangemall.sell_product
+       set time=#{time}, pid=#{pid}, uid= #{uid}
+        where id = #{id}
+   </update>
+
+    <!--根据id查询，返回一用户上传商品-->
+   <select id="querySellProduct" resultType="SellProduct">
+       select * from easyexchangemall.sell_product
+       where id = #{id}
+   </select>
+
+    <!--查询上传的全部商品-->
+   <select id="queryAllSellProduct" resultType="SellProduct">
+       select * from easyexchangemall.sell_product
+   </select>
+
+</mapper>

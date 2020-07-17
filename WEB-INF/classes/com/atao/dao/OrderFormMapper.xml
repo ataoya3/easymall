@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atao.dao.OrderFormMapper">
+
+    <!--增加一条订单-->
+    <insert id="addOrderForm" parameterType="OrderForm">
+        insert into easyexchangemall.order_form
+        ( pid, seller_id, buyer_id, time)
+        value ( #{pid}, #{sellerId}, #{buyerId}, #{time})
+    </insert>
+
+    <!--根据id删除一条订单-->
+    <delete id="deleteOrderForm" >
+        delete from easyexchangemall.order_form
+        where id = #{id}
+    </delete>
+
+    <!--更新订单-->
+   <update id="updateOrderForm" parameterType="OrderForm">
+       update easyexchangemall.order_form
+       set  pid=#{pid}, seller_id=#{sellerId}, buyer_id=#{buyerId}, time=#{time}
+        where id = #{id}
+   </update>
+
+    <!--根据某些条件查询订单Map-->
+    <select id="queryOrderFormWhere" parameterType="Map" resultType="OrderForm">
+        select * from easyexchangemall.order_form
+        <where>
+            <if test="pid != null">
+                pid = #{pid}
+            </if>
+            <if test="buyerId != null">
+                and buyer_id= #{buyerId}
+            </if>
+            <if test="sellerId != null">
+                and  seller_id= #{sellerId}
+            </if>
+        </where>
+    </select>
+    
+    <!--根据id查询,返回一条订单-->
+   <select id="queryOrderForm" resultType="OrderForm">
+       select * from easyexchangemall.order_form
+       where id = #{id}
+   </select>
+
+  <!--  //联合Product查询订单信息
+    List<OrderForm> queryOrderFormWithProduct();-->
+    <select id="queryOrderFormWithProduct" resultMap="OrderFormProduct" parameterType="Map">
+        SELECT  p.pic1, p.NAME, p.price, p.home_page_detail, p.sell_status,o.pid,o.id, o.seller_id,o.buyer_id,o.time
+        FROM easyexchangemall.order_form o,easyexchangemall.product p
+        WHERE  p.id = o.pid
+        <if test="sellerId != null">
+            and o.seller_id = #{sellerId}
+        </if>
+        <if test="buyerId != null">
+            and o.buyer_id = #{buyerId}
+        </if>
+        <if test="pid != null">
+            and o.pid = #{pid}
+        </if>
+        ORDER BY o.id DESC;
+    </select>
+    <resultMap id="OrderFormProduct" type="OrderForm">
+        <id property="id" column="id"/>
+<!--        <result property="id" column="id"/>-->
+        <result property="pid" column="pid"/>
+        <result property="sellerId" column="seller_id"/>
+        <result property="buyerId" column="buyer_id"/>
+        <result property="time" column="time"/>
+        <association property="product" javaType="Product">
+            <id property="id" column="id"/>
+            <result property="pic1" column="pic1"/>
+            <result property="name" column="NAME"/>
+            <result property="price" column="price"/>
+            <result property="homePageDetail" column="home_page_detail"/>
+            <result property="sellStatus" column="sell_status" />
+        </association>
+    </resultMap>
+
+    <!--查询全部订单-->
+   <select id="queryAllOrderForm" resultType="OrderForm">
+       select * from easyexchangemall.order_form
+   </select>
+
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atao.dao.PdCollectionMapper">
+
+    <!--增加一条收藏-->
+    <insert id="addPdCollection" parameterType="PdCollection">
+        insert into easyexchangemall.collection
+        ( seller_id, buyer_id,pid)
+        value (#{sellerId}, #{buyerId},#{pid})
+    </insert>
+
+    <!--根据id删除一条收藏-->
+    <delete id="deletePdCollection" >
+        delete from easyexchangemall.collection
+        where id = #{id}
+    </delete>
+
+    <!--更新收藏信息-->
+   <update id="updatePdCollection" parameterType="PdCollection">
+       update easyexchangemall.collection
+       set seller_id = #{sellerId}, buyer_id = #{buyerId}
+        where id = #{id}
+   </update>
+
+    <!--根据id查询,返回一条收藏-->
+   <select id="queryPdCollection" resultType="PdCollection">
+       select * from easyexchangemall.collection
+       where id = #{id}
+   </select>
+
+    <!--查询全部收藏信息-->
+   <select id="queryAllPdCollection" resultType="PdCollection">
+       select * from easyexchangemall.collection
+   </select>
+
+    <!--联合Product表查询用户收藏的商品信息(根据买家id)-->
+    <select id="queryCollectionWithProduct" resultMap="PdCollectionProduct">
+        SELECT c.seller_id, c.buyer_id, c.pid, p.pic1, p.NAME, p.home_page_detail, p.price,p.sell_status,p.id
+        FROM easyexchangemall.product p, easyexchangemall.collection c
+        WHERE  c.pid= p.id AND c.buyer_id = #{buyerId}
+        ORDER BY c.id DESC;
+    </select>
+    <resultMap id="PdCollectionProduct" type="PdCollection">
+        <id property="id" column="id"/>
+        <result property="sellerId" column="seller_id"/>
+        <result property="sellerId" column="buyer_id"/>
+        <result property="pid" column="pid"/>
+        <association property="product" javaType="Product">
+            <id property="id" column="id"/>
+            <result property="pic1" column="pic1"/>
+            <result property="name" column="NAME"/>
+            <result property="price" column="price"/>
+            <result property="homePageDetail" column="home_page_detail"/>
+            <result property="sellStatus" column="sell_status"/>
+            <result property="id" column="id"/>
+        </association>
+    </resultMap>
+
+
+</mapper>
